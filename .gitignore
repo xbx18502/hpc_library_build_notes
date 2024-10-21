@@ -1,0 +1,7 @@
+*.out
+*.log
+*.err
+*.stat
+*.stats
+*.csv
+
