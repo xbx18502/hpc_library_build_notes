@@ -1,0 +1,115 @@
+Log in to remote server: ssh username@[ip address]
+
+ssh -v -i mykey_rsa user005@13.114.68.164
+
+ssh ssh dynamic port forwarding
+
+ssh -D 1080 -C -q -N -i "C:\Users\pxin1\Files\Kyushu\oshima lab\xiao_magma.ppk" xiao@133.5.7.12
+
+ssh tunnel
+ssh -N -L 1080:192.168.4.3:22 -i "C:\Users\pxin1\Files\Kyushu\oshima lab\xiao_magma.ppk" xiao@133.5.7.12
+ssh -N -L 1080:gadi.nci.org.au:22 -i "C:\Users\pxin1\Files\Kyushu\oshima lab\xiao_rsa_magma.rsa" xiao@133.5.7.12
+
+
+
+
+Stop a command : ctrl+c
+
+Display active process: ps
+
+Show all installed pakages: apt list --installed
+
+Check specific pakage installed or not: apt list -a [Name]
+
+view current directory: pwd
+
+Change directory:
+cd - 
+cd ~
+cd ..
+cd /
+
+cat: print a file
+
+more
+
+less: press q to escape
+
+ls: 
+ls -a /home
+
+New a file: touch [Filename]
+
+copy:
+cp [filename] [directory]
+
+remove:
+rm [filename]
+
+vi:
+insert mode: i,a,o
+Replace mode: R
+
+quit:
+:q, ZQ(don't save)/ZZ(save) 
+
+visual mode: v
+copy: y
+cur: d
+paste: p
+
+check all active services: systemctl --type=service --state=running
+
+check v2ray: systemctl status v2ray
+restart v2ray: systemctl restart v2ray
+allow a port: ufw allow [port]
+config of v2ray: /usr/local/etc/v2ray/config.json
+
+
+--------------------------------------------------------------------
+how to use vscode connect to wsl
+
+1. open ubuntu
+2. run 'code .'
+
+how to connect to remote server use ssh
+1. open vscode
+2. press F1
+3. select Remote-SSH: Connect to Host... 
+4. enter username, ip address, and password
+----------------------------------------------------------------
+git
+
+echo "# hpc-test" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/xbx18502/hpc-test.git
+git push -u origin main
+
+git remote add origin https://github.com/xbx18502/hpc-test.git
+git branch -M main
+git push -u origin main
+######################################################
+in blast
+
+use key id_ed25519
+git push origin main
+---------------------------------------------------------------
+Mysql on Mac:
+Connect to mysql server on local:
+mysql -u root -p
+
+Start mysql server:
+brew services start mysql
+
+brew services start mysql: 启动 MySQL 服务器，并设置为自启动。
+brew services stop mysql: 停止 MySQL 服务器，并设置为不自启动。
+brew services run mysql: 只启动 MySQL 服务器。
+mysql.server start: 启动 MySQL 服务器。
+mysql.server stop: 停止 MySQL 服务器。
+
+设置mysql分页：
+pager less -S
+nopager

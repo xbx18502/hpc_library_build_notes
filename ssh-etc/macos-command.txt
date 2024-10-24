@@ -1,0 +1,18 @@
+# find wallpaper
+find / -name "*Dome*.heic" 2>/dev/null
+
+peixinxiao@Peixins-MacBook-Pro 大規模計算特論 % find / -name "*Dome*.heic" 2>/dev/null
+
+/System/Library/Desktop Pictures/.thumbnails/Dome Light.heic
+/System/Library/Desktop Pictures/.thumbnails/Dome Dark.heic
+/System/Library/Desktop Pictures/.thumbnails/Dome.heic
+/System/Volumes/Update/mnt1/System/Library/Desktop Pictures/.thumbnails/Dome Light.heic
+/System/Volumes/Update/mnt1/System/Library/Desktop Pictures/.thumbnails/Dome Dark.heic
+/System/Volumes/Update/mnt1/System/Library/Desktop Pictures/.thumbnails/Dome.heic
+/System/Volumes/Data/System/Library/Desktop Pictures/.thumbnails/Dome Light.heic
+/System/Volumes/Data/System/Library/Desktop Pictures/.thumbnails/Dome Dark.heic
+/System/Volumes/Data/System/Library/Desktop Pictures/.thumbnails/Dome.heic
+/System/Volumes/Data/Users/peixinxiao/Library/Application Support/com.apple.mobileAssetDesktop/Dome.heic
+
+
+/System/Volumes/Data/Users/peixinxiao/Library/Application Support/com.apple.mobileAssetDesktop/

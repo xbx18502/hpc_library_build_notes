@@ -1,0 +1,2 @@
+eval $(ssh-agent -s)
+ssh-add /home/pj24001791/ku40000464/.ssh/github-genkai
