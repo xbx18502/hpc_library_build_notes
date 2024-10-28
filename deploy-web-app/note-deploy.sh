@@ -169,6 +169,8 @@ sudo nginx -t
 
 sudo systemctl reload nginx
 
+sudo nginx -s reload
+
 sudo systemctl restart nginx
 
 
@@ -239,6 +241,9 @@ server {
     }
 }
 # ------------------------------------------------------------
+
+
+
 
 
 
