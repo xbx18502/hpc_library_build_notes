@@ -1,6 +1,6 @@
 #!/bin/bash
 #PJM -L rscgrp=b-batch
-#PJM -L node=1
+#PJM -L node=2
 #PJM -L elapse=00:05:00
 #PJM -j
 #PJM -S
@@ -18,5 +18,5 @@ export OSU_MICROBENCHMARKS_XCCL_INSTALL="/home/pj24001791/ku40000464/osu-Micro-B
 export OSU_MICROBENCHMARKS_MPI_INSTALL="/home/pj24001791/ku40000464/osu-Micro-Benchmarks/osu-install-path"
 
 
-${MPI_HOME}/bin/mpirun -np 2  \
+${MPI_HOME}/bin/mpirun -v --display-allocation --display-map -np 2 --map-by ppr:1:node  \
 ${OSU_MICROBENCHMARKS_MPI_INSTALL}/libexec/osu-micro-benchmarks/mpi/one-sided/osu_put_latency

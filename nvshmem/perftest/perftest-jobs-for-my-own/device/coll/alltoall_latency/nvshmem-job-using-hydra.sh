@@ -1,6 +1,6 @@
 #!/bin/bash
 #PJM -L rscgrp=b-batch
-#PJM -L node=2
+#PJM -L node=1
 #PJM -L elapse=00:02:00
 #PJM -j
 #PJM -S
@@ -17,6 +17,6 @@ export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$MPI_HOME/lib:$NVSHMEM_HOME/lib:$LD_LIB
 
 export NVSHMEM_PERFTEST_INSTALL="/home/pj24001791/ku40000464/shmem/nvshmem-copy/perftest/build/"
 
-$HYDRA_HOME/bin/nvshmrun -v --display-allocation --display-map --oversubscribe -n 2 --map-by ppr:1:node  \
-$NVSHMEM_PERFTEST_INSTALL/device/pt-to-pt/shmem_put_latency
+$HYDRA_HOME/bin/nvshmrun -n 4 \
+$NVSHMEM_PERFTEST_INSTALL/device/coll/alltoall_latency
 

@@ -1,0 +1,23 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 19,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "my_preset",
+            "hidden": false,
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "environment": {
+                "CUDA_TOOLKIT_ROOT_DIR": "/home/app/nvhpc/23.9/Linux_x86_64/23.9/cuda/12.2"
+                
+            }
+        }
+    ]
+}
