@@ -5,3 +5,8 @@
 *.stats
 *.csv
 
+# Don't ignore .gitignore itself
+!.gitignore
+
+# Specific ignore for gradle
+**/.gradle/

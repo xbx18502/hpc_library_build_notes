@@ -4,6 +4,8 @@ ssh -v -i mykey_rsa user005@13.114.68.164
 
 ssh ssh dynamic port forwarding
 
+ssh -D 1080 -C -N magma
+
 ssh -D 1080 -C -q -N -i "C:\Users\pxin1\Files\Kyushu\oshima lab\xiao_magma.ppk" xiao@133.5.7.12
 
 ssh tunnel
