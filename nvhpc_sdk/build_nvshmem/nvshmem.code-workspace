@@ -1,0 +1,22 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "C_Cpp.default.includePath": [
+            "${workspaceFolder}/**"  // 修正include路径格式
+        ],
+        "files.associations": {
+            "*.cu": "cuda-cpp",
+            "*.cuh": "cuda-cpp"
+        },
+        "clangd.arguments": [
+            "--enable-config",
+            "--header-insertion=never",
+        ],
+        "C_Cpp.intelliSenseEngine": "disabled",
+        "clangd.path": "/home/pj24001791/ku40000464/clangd/clangd_19.1.0/bin/clangd" // 禁用默认的IntelliSense，使用clangd
+    }
+}
