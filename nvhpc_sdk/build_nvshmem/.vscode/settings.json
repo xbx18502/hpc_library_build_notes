@@ -1,3 +1,11 @@
 {
-    "C_Cpp.errorSquiggles": "enabled"
+    "clangd.path": "/home/pj24001791/ku40000464/clangd/clangd_19.1.0/bin/clangd",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "/home/pj24001791/ku40000464/nvhpc_24.9/nvhpc_24.9_install_path/Linux_x86_64/24.9/cuda/12.6/include"
+    ],
+    "files.associations": {
+        "*.cuh": "cuda-cpp",
+        "*.cu": "cuda-cpp"
+    }
 }

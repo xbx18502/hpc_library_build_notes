@@ -115,3 +115,7 @@ mysql.server stop: 停止 MySQL 服务器。
 设置mysql分页：
 pager less -S
 nopager
+
+calculate lines of a CUDA project
+find . \( -name "*.cu" -o -name "*.cuh" -o -name "*.cpp" -o -name "*.h" \) | xargs cat | grep -v "^$" | wc -l
+

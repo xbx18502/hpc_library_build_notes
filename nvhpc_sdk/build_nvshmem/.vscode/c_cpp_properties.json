@@ -4,9 +4,13 @@
             "name": "nvshmem",
             "compileCommands": "${workspaceFolder}/out/build/my_preset/compile_commands.json",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/home/pj24001791/ku40000464/nvhpc_24.9/**"
             ],
-            "defines": [],
+            "defines": [
+                "__CUDA_ARCH__=520",
+                "__CUDA_ACC__=1"
+            ],
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x64",
