@@ -1,5 +1,5 @@
 // src/main/java/com/booking/model/User.java
-package com.booking.model;
+package com.booking.entity;
 
 public class User {
     private String id;

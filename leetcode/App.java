@@ -1,6 +1,11 @@
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 public class App {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
@@ -59,6 +64,23 @@ public class App {
         set.remove(1);
         System.out.println(set.contains(2));
         
+        // map
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(1, 2);
+        map.put(2, 3);
+        map.put(3, 4);
+        map.remove(1);
+        System.out.println(map.get(2));
+        System.out.println(map.containsKey(2));
+        System.out.println(map.containsValue(3));
+        System.out.println(map.keySet());
+        // map iteration
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            entry.setValue(99);
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+        // getOrDefault
+        System.out.println(map.getOrDefault(1, 0));
 
 
 

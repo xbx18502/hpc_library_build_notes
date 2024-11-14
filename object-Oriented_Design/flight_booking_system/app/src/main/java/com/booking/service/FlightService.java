@@ -1,9 +1,10 @@
 // src/main/java/com/booking/service/FlightService.java
 package com.booking.service;
 
-import com.booking.model.Flight;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.booking.entity.Flight;
 
 public interface FlightService {
     List<Flight> searchFlights(String origin, String destination, LocalDateTime date);

@@ -1,0 +1,71 @@
+%% Created by Junhyuk Lee, Ohshima Lab. in 14th November, 2024
+%% Do not share this template with students/faculties outside of Ohshima Lab. (just in case)
+
+\documentclass[twocolumn]{article}
+
+%\usepackage[japanese]{babel}
+
+\usepackage[a4paper,top=2cm,bottom=3cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\usepackage{breakurl}
+\usepackage{algorithm}
+%\usepackage{algpseudocode}
+
+%\usepackage{lipsum}
+
+%% ----- adjusted spacing between section titles -----
+\usepackage{titlesec}
+\titleformat{\section}[block]{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{0.5\baselineskip}{0.5\baselineskip}
+
+\titleformat{\subsection}[block]{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{0.4\baselineskip}{0.4\baselineskip}
+
+\titleformat{\subsubsection}[block]{\normalfont\large\bfseries}{\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{0.4\baselineskip}{0.4\baselineskip}
+%% ----- adjusted spacing between section titles -----
+
+
+\title{Seminar in Information Science and Technology\\[10pt]template}
+\author{}
+\date{}
+
+\begin{document}
+\twocolumn[{%
+\begin{@twocolumnfalse}
+\maketitle
+
+\vspace{-1cm}
+
+\begin{center}
+\large
+\begin{tabular}{rl}
+    発表者： & 九大 太郎 \\
+    指導教員： & 九大 太郎 \\
+    科目名： & 情報理工学演習 \\
+    講演場所： & オンライン (Microsoft Teams) \\
+    講演日時： & 20XX年XX月XX日 XX:XX～XX:XX \\
+\end{tabular}
+\normalsize
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{abstract}
+\lipsum[1-2]
+\end{abstract}
+
+\end{@twocolumnfalse}
+}]
+
+\lipsum
+\cite{abcd00}
+
+\bibliographystyle{abbrv}
+\bibliography{sample}
+
+\end{document}

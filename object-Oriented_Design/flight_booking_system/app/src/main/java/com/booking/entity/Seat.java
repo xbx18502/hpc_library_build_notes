@@ -1,5 +1,5 @@
 // src/main/java/com/booking/model/Seat.java
-package com.booking.model;
+package com.booking.entity;
 
 public class Seat {
     private String seatNumber;

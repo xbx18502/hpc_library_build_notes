@@ -1,9 +1,9 @@
 // src/main/java/com/booking/service/ReservationService.java
 package com.booking.service;
 
-import com.booking.model.Reservation;
-import com.booking.model.User;
-import com.booking.model.Flight;
+import com.booking.entity.Flight;
+import com.booking.entity.Reservation;
+import com.booking.entity.User;
 
 public interface ReservationService {
     Reservation bookFlight(User user, Flight flight, String seatNumber);

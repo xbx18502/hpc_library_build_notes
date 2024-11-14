@@ -1,7 +1,7 @@
 // src/main/java/com/booking/service/UserService.java
 package com.booking.service;
 
-import com.booking.model.User;
+import com.booking.entity.User;
 
 public interface UserService {
     User registerUser(String name, String email, String phone);

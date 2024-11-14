@@ -6,6 +6,7 @@
 *.csv
 *.jar
 *.class
+*.zip
 
 # Don't ignore .gitignore itself
 !.gitignore

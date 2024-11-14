@@ -1,2 +1,14 @@
+# on genkai
 eval $(ssh-agent -s)
 ssh-add /home/pj24001791/ku40000464/.ssh/github-genkai
+
+# on mac
+eval "$(ssh-agent -k)"
+eval "$(ssh-agent)"
+ssh-add /Users/peixinxiao/Library/CloudStorage/OneDrive-KyushuUniversity/Files/Kyushu/homework/大規模計算特論/daikibo.rsa
+
+# check
+ssh-add -l
+
+# delete all keys
+ssh-add -D

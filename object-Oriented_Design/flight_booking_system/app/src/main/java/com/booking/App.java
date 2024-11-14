@@ -1,7 +1,7 @@
 // src/main/java/com/booking/Main.java
 package com.booking;
 
-import com.booking.model.User;
+import com.booking.entity.User;
 import com.booking.repository.Table;
 
 public class App {

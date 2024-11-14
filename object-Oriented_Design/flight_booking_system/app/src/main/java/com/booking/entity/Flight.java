@@ -1,5 +1,5 @@
 // src/main/java/com/booking/model/Flight.java
-package com.booking.model;
+package com.booking.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
