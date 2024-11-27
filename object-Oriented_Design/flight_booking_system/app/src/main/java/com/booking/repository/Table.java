@@ -8,9 +8,14 @@ import java.util.Map;
 
 public class Table<T> {
     private final Map<String, T> data = new HashMap<>();
-    
-    public void insert(String id, T item) {
+    private int currentId = 0; // 新增字段，用于跟踪当前的ID
+
+    public void insertById(String id, T item) {
         data.put(id, item);
+        currentId = Math.max(currentId, Integer.parseInt(id));
+    }
+    public void insert(T item) {
+        data.put(String.valueOf(++currentId), item);
     }
     
     public T get(String id) {

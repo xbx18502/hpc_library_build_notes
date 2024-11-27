@@ -11,8 +11,14 @@ public class App {
         
         // 测试插入
         User user1 = new User("1", "John Doe", "john@example.com", "1234567890");
-        userTable.insert(user1.getId(), user1);
-        
+        userTable.insertById(user1.getId(), user1);
+        userTable.insert(new User("2", "Jane Graves", "jane@qq.com", "0987654321"));
+        userTable.insert(new User("3", "Tom Trump", "tom@gmail.com", "1357924680"));
+
+        // print all users
+        for (User user : userTable.getAll()) {
+            System.out.println("User: " + user.getName());
+        }
         // 测试查询
         User retrieved = userTable.get("1");
         System.out.println("Retrieved user: " + retrieved.getName());
