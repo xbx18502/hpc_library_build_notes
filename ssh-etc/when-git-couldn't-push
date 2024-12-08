@@ -9,7 +9,7 @@ ssh-add /Users/peixinxiao/Library/CloudStorage/OneDrive-KyushuUniversity/Files/K
 
 # on wsl
 eval $(ssh-agent -s)
-ssh-add /mnt/c/Users/pxin1/Files/Kyushu/homework/大規模計算特論/daikibo.rsa
+ssh-add /home/xiaopeixin/daikibo.rsa
 
 # check
 ssh-add -l
