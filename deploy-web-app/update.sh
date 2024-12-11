@@ -6,6 +6,7 @@ mvn clean package
 sudo systemctl stop myapp
 # copy the jar file to the server
 sudo cp target/xm-blog-0.0.1-SNAPSHOT.jar /opt/myapp/app.jar
+# check application.yml file
 
 # start systemd service
 sudo systemctl daemon-reload
