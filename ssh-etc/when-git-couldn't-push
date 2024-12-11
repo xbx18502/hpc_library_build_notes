@@ -7,6 +7,10 @@ eval "$(ssh-agent -k)"
 eval "$(ssh-agent)"
 ssh-add /Users/peixinxiao/Library/CloudStorage/OneDrive-KyushuUniversity/Files/Kyushu/homework/大規模計算特論/daikibo.rsa
 
+# on wsl
+eval $(ssh-agent -s)
+ssh-add /home/xiaopeixin/daikibo.rsa
+
 # check
 ssh-add -l
 
