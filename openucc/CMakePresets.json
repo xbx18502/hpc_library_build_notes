@@ -1,0 +1,37 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 19,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "my_preset",
+            "hidden": false,
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "NVSHMEM_BUILD_TESTS": "ON"
+            },
+            "environment": {
+                "CUDA_HOME": "/home/pj24001791/ku40000464/nvhpc_24.9/nvhpc_24.9_install_path/Linux_x86_64/24.9/cuda/12.6",
+                "NVSHMEM_USE_GDRCOPY":"0",
+                "NVSHMEM_MPI_SUPPORT": "1",
+                "NVSHMEM_SHMEM_SUPPORT": "0",
+                "MPI_HOME":"/home/pj24001791/ku40000464/nvhpc_24.9/nvhpc_24.9_install_path/Linux_x86_64/24.9/comm_libs/mpi",
+                "NVSHMEM_UCX_SUPPORT":"1",
+                "UCX_HOME":"/home/pj24001791/ku40000464/nvhpc_24.9/nvhpc_24.9_install_path/Linux_x86_64/24.9/comm_libs/ucx",
+                "NVSHMEM_LIBFABRIC_SUPPORT": "0",
+                "NVSHMEM_USE_NCCL":"1",
+                "NCCL_HOME":"/home/pj24001791/ku40000464/nvhpc_24.9/nvhpc_24.9_install_path/Linux_x86_64/24.9/comm_libs/nccl",
+                "NVSHMEM_IBGDA_SUPPORT":"0",
+                "NVSHMEM_PREFIX": "/home/pj24001791/ku40000464/nvhpc_24.9/nvshmem_install",
+                "CUDAToolkit_ROOT": "/home/pj24001791/ku40000464/nvhpc_24.9/nvhpc_24.9_install_path/Linux_x86_64/24.9/cuda/12.6",
+                "UCX_DIR" :"/home/pj24001791/ku40000464/nvhpc_24.9/nvhpc_24.9_install_path/Linux_x86_64/24.9/comm_libs/12.6/hpcx/hpcx-2.20/ucx/lib/cmake/ucx"
+                
+            }
+        }
+    ]
+}
