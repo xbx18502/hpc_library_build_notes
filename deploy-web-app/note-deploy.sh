@@ -186,6 +186,7 @@ sudo chmod 755 /home/xiao/vue-project/www
 
 sudo journalctl -u myapp -f
 
+sudo tail -f /var/log/nginx/error.log
 
 # edit .env.production file
 nano /home/xiao/web_app_test/xm-blog/vue/.env.production
