@@ -36,6 +36,7 @@ __global__ void simple_shift(int *destination) {
 int main (int argc, char *argv[]) {
     int mype_node;
     int* msg = (int*)malloc(sizeof(int)*message_size);
+    int* msg_main = (int*)malloc(sizeof(int)*message_size);
     cudaStream_t stream;
     int rank, nranks;
     MPI_Comm mpi_comm = MPI_COMM_WORLD;
@@ -53,10 +54,14 @@ int main (int argc, char *argv[]) {
     CUDA_CHECK(cudaStreamCreate(&stream));
     std::cout<<"complete cudaSetDevice"<<std::endl;
     int *destination = (int *) nvshmem_malloc (sizeof(int)*message_size);
-    for(int i=0; i<message_size; i++) {
-        destination[i] = i;
-    }
     std::cout<<"complete nvshmem_malloc"<<std::endl;
+    // CUDA_CHECK(cudaMemset(destination, 0, sizeof(int)*message_size));
+    for(int i=0; i<message_size; i++) {
+        msg_main[i] = i+rank;
+    }
+    CUDA_CHECK(cudaMemcpy(destination, msg_main, sizeof(int)*message_size,
+                cudaMemcpyHostToDevice));
+    std::cout<<"complete *destination init"<<std::endl;
     simple_shift<<<1, 1, 0, stream>>>(destination);
     std::cout<<"complete simple_shift"<<std::endl;
     nvshmemx_barrier_all_on_stream(stream);
@@ -66,7 +71,11 @@ int main (int argc, char *argv[]) {
     std::cout<<"complete cudaMemcpyAsync"<<std::endl;
     CUDA_CHECK(cudaStreamSynchronize(stream));
     std::cout<<"complete cudaStreamSynchronize"<<std::endl;
-    printf("%d: received message %d\n", nvshmem_my_pe(), *msg);
+    printf("%d: received message ", nvshmem_my_pe());
+    for(int i=0; i<message_size; i++) {
+        printf("%d ", msg[i]);
+    }
+    printf("\n");
 
     nvshmem_free(destination);
     nvshmem_finalize();
