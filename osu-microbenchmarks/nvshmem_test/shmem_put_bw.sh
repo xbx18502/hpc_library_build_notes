@@ -30,8 +30,8 @@ Attribute-Based-Initialization-Example.out -L $NVSHMEM_HOME/lib -lnvshmem_host -
 
 compile_static=" \
 nvcc -rdc=true -ccbin g++ -gencode=$NVCC_GENCODE -I \
-$NVSHMEM_HOME/include:$MPI_HOME/include Attribute-Based-Initialization-Example.cu -o \
-Attribute-Based-Initialization-Example.out -L $NVSHMEM_HOME/lib:$MPI_HOME/lib \
+$NVSHMEM_HOME/include:$MPI_HOME/include shmem_put_bw.cu -o \
+shmem_put_bw.out -L $NVSHMEM_HOME/lib:$MPI_HOME/lib \
 -lmpi -lnvshmem -lnvidia-ml -lcuda -lcudart "
 
 compile2="nvcc -rdc=true -ccbin g++ -gencode=$NVCC_GENCODE \
@@ -54,10 +54,12 @@ mpirun -v --display-allocation --display-map -hostfile ${PJM_O_NODEINF} \
 -x NVSHMEMTEST_USE_MPI_LAUNCHER=1 \
 ./Attribute-Based-Initialization-Example.out "
 
+echo ${compile_static}
+exec ${compile_static}
 # echo ${task_nvshmrun}
 
 # eval ${task_nvshmrun}
 
-echo ${task_mpi}
+# echo ${task_mpi}
 
-eval ${task_mpi}
+# eval ${task_mpi}

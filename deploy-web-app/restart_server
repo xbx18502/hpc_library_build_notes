@@ -1,0 +1,2 @@
+in initramfs
+echo b > /proc/sysrq-trigger
