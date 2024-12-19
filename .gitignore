@@ -1,4 +1,5 @@
 *.out
+*.out1
 *.log
 *.err
 *.stat
