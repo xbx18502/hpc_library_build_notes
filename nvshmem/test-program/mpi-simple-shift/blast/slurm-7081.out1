@@ -1,0 +1,14 @@
+
+======================   ALLOCATED NODES   ======================
+	fire: flags=0x11 slots=32 max_slots=0 slots_inuse=0 state=UP
+=================================================================
+ Data for JOB [4624,1] offset 0 Total slots allocated 32
+
+ ========================   JOB MAP   ========================
+
+ Data for node: fire	Num slots: 32	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [4624,1] App: 0 Process rank: 0 Bound: socket 0[core 0[hwt 0-1]]:[BB/../../../../../../../../../../../../../../..]
+
+ =============================================================
+WARN: init failed for remote transport: ibrc
+0: received message 42
