@@ -30,4 +30,8 @@ mpirun -v --display-allocation --display-map -hostfile ${PJM_O_NODEINF} \
 -x NVSHMEMTEST_USE_MPI_LAUNCHER=1 \
 ./mpi_init_put_bw.out "
 
-exec ${task_mpi}
+for i in {1..10}
+do
+    echo "iteration: ${i}"
+    eval ${task_mpi}
+done

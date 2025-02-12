@@ -1,7 +1,7 @@
 #!/bin/bash
 #PJM -L rscgrp=b-batch
 #PJM -L node=1
-#PJM -L elapse=00:05:00
+#PJM -L elapse=00:02:00
 #PJM -j
 #PJM -S
 
@@ -23,16 +23,12 @@ export NCCL_HOME="/home/app/nvhpc/24.11/Linux_x86_64/24.11/comm_libs/nccl"
 
 export OMPI_MCA_plm_rsh_agent="/usr/bin/pjrsh"
 
-export NVSHMEM_BOOTSTRAP=MPI
 
-# -x NVSHMEMTEST_USE_MPI_LAUNCHER=1 \
 task_mpi=" \
 mpirun -v --display-allocation --display-map -hostfile ${PJM_O_NODEINF} \
 -np 2 --map-by ppr:2:node \
-./mpi_init_put_bw.out "
+-x NVSHMEMTEST_USE_MPI_LAUNCHER=1 \
+./Attribute-Based-Initialization-Example.out "
 
-for i in {1..10}
-do
-    echo "iteration: ${i}"
-    eval ${task_mpi}
-done
+
+eval ${task_mpi}

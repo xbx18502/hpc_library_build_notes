@@ -15,8 +15,8 @@ export NCCL_HOME="/home/app/nvhpc/23.9/Linux_x86_64/23.9/comm_libs/nccl"
 
 compile_static=" \
 nvcc -rdc=true -ccbin g++ -gencode=$NVCC_GENCODE -I \
-$NVSHMEM_HOME/include:$MPI_HOME/include mpi_init_put_bw.cu -o \
-mpi_init_put_bw.out -L $NVSHMEM_HOME/lib:$MPI_HOME/lib \
+$NVSHMEM_HOME/include:$MPI_HOME/include o1.cu -o \
+o1.out -L $NVSHMEM_HOME/lib:$MPI_HOME/lib \
 -lmpi -lnvshmem -lnvidia-ml -lcuda -lcudart "
 
 echo ${compile_static}

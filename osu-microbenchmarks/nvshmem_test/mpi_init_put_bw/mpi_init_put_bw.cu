@@ -39,6 +39,58 @@ __global__ void simple_shift(double *destination, int size) {
     nvshmemx_double_put_nbi_block(destination,destination, size, peer);
 }
 
+__global__ void bw(double* dest, int size){
+    int tid = (threadIdx.x * blockDim.y * blockDim.z + threadIdx.y * blockDim.z + threadIdx.z);
+    int bid = blockIdx.x;
+    int nblocks = gridDim.x;
+    int mype = nvshmem_my_pe();
+    int npes = nvshmem_n_pes();
+    int peer = (mype + 1) % npes;
+    nvshmemx_double_put_nbi_block(dest + (bid * (size / nblocks)),
+                                  dest + (bid * (size / nblocks)), size / nblocks, peer);
+
+}
+
+__global__ void bw2(double *data_d, volatile unsigned int *counter_d, int len, int pe, int iter) {
+    int i, peer;
+    unsigned int counter;
+    int tid = (threadIdx.x * blockDim.y * blockDim.z + threadIdx.y * blockDim.z + threadIdx.z);
+    int bid = blockIdx.x;
+    int nblocks = gridDim.x;
+
+    peer = !pe;
+    for (i = 0; i < iter; i++) {
+        nvshmemx_double_put_nbi_block(data_d + (bid * (len / nblocks)),
+                                      data_d + (bid * (len / nblocks)), len / nblocks, peer);
+
+        // synchronizing across blocks
+        __syncthreads();
+        if (!tid) {
+            __threadfence();
+            counter = atomicInc((unsigned int *)counter_d, UINT_MAX);
+            if (counter == (gridDim.x * (i + 1) - 1)) {
+                *(counter_d + 1) += 1;
+            }
+            while (*(counter_d + 1) != i + 1)
+                ;
+        }
+        __syncthreads();
+    }
+
+    // synchronize and call nvshme_quiet
+    __syncthreads();
+    if (!tid) {
+        __threadfence();
+        counter = atomicInc((unsigned int *)counter_d, UINT_MAX);
+        if (counter == (gridDim.x * (i + 1) - 1)) {
+            nvshmem_quiet();
+            *(counter_d + 1) += 1;
+        }
+        while (*(counter_d + 1) != i + 1)
+            ;
+    }
+    __syncthreads();
+}
 int main (int argc, char *argv[]) {
     int mype_node;
     double* msg = (double*)malloc(sizeof(double)*message_size);
@@ -97,7 +149,11 @@ int main (int argc, char *argv[]) {
                     cudaEventRecord(start);
                 }
 
-                simple_shift<<<1, 1, 0, stream>>>(destination, size);
+                //simple_shift<<<1, 1 , 0, stream>>>(destination, size);
+                //CUDA_CHECK(cudaStreamSynchronize(stream)); 
+                // bw<<<4, 1024, 0, stream>>>(destination, size);
+                bw<<<4, 1024, 0, stream>>>(destination, size);
+                CUDA_CHECK(cudaStreamSynchronize(stream));
             }
 
             cudaEventRecord(stop);
@@ -150,7 +206,7 @@ int main (int argc, char *argv[]) {
     //     printf("%f ", msg[i]);
     // }
     // printf("\n");
-
+    CUDA_CHECK(cudaStreamSynchronize(stream));
     nvshmem_free(destination);
     nvshmem_finalize();
     MPI_Finalize();

@@ -1,4 +1,9 @@
 #!/bin/bash
+#PJM -L rscgrp=b-batch
+#PJM -L node=1
+#PJM -L elapse=00:02:00
+#PJM -j
+#PJM -S
 
 # environment variables for NV HPC SDK 24.9
 module purge
@@ -19,8 +24,16 @@ export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$MPI_HOME/lib:$NVSHMEM_HOME/lib:$LD_LIB
 export CMAKE_PREFIX_PATH="${HOME}/nvhpc_24.9/nvhpc_24.9_install_path/\
 Linux_x86_64/24.9/comm_libs/nvshmem"
 
-cd ${HOME}/nvhpc_24.9/nvshmem_src_3.0.6-4/perftest
-cmake ..\
-  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-  -DCMAKE_INSTALL_PREFIX="${HOME}/nvhpc_24.9/nvhpc_24.9_install_path/Linux_x86_64/24.9/comm_libs/nvshmem/perftest/perftest-install" 
+export NVSHMEM_PERFTEST_INSTALL="${HOME}/nvhpc_24.9/nvshmem_src_3.0.6-4/perftest/perftest_install"
 
+task_hydra="$HYDRA_HOME/bin/nvshmrun -n 2 \
+$NVSHMEM_PERFTEST_INSTALL/device/pt-to-pt/shmem_put_bw"
+
+task_mpi="${MPI_HOME}/bin/mpirun -n 2 \
+-x NVSHMEMTEST_USE_MPI_LAUNCHER=1 \
+$NVSHMEM_PERFTEST_INSTALL/device/pt-to-pt/shmem_put_bw"
+
+for i in {1..10}
+do
+    eval $task_mpi
+done

@@ -146,48 +146,31 @@ int main (int argc, char *argv[]) {
             skip = skip_large = 0;
         }
         //nvshmemx_barrier_all_on_stream(stream);
+        nvshmem_barrier_all();
         if (0 == mype_node) {
             
-            for (int i = 0; i < loop + skip; i++) {
-                
-                if (i == skip) {
-                    CUDA_CHECK(cudaStreamSynchronize(stream));
-                    //CUDA_CHECK(cudaDeviceSynchronize());
-                    nvshmemx_barrier_all_on_stream(stream);
-                    cudaEventRecord(start);
-                }
-                
-
-                // ---------bw---------------------
-                bw2<<<4, 1024, 0, stream>>>(destination, size);
-                CUDA_CHECK(cudaStreamSynchronize(stream));
-                //-------------------------------
-                
-
-                
-
-                
-                
-
-                
-            }
-            /*
+            
+            
             //-------bw2-------
+            // CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
+            // bw2<<<4,1024, 0 ,stream>>> (destination, counter_d, size, !mype_node,skip);
             CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
-            bw2<<<4,1024, 0 ,stream>>> (destination, counter_d, size, !mype_node,skip);
-            CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
-            CUDA_CHECK(cudaStreamSynchronize(stream));
+            // CUDA_CHECK(cudaStreamSynchronize(stream));
             cudaEventRecord(start);
+            CUDA_CHECK(cudaEventSynchronize(start));
             bw2<<<4,1024, 0 ,stream>>> (destination, counter_d, size, !mype_node,loop);
             //---------------------
-            */
+            // nvshmem_barrier_all();
             cudaEventRecord(stop);
             
             CUDA_CHECK(cudaEventSynchronize(stop));
         }
-        //nvshmem_barrier_all();
-        CUDA_CHECK(cudaStreamSynchronize(stream));
-        nvshmemx_barrier_all_on_stream(stream);
+        else{
+            // nvshmem_barrier_all();
+        }
+        nvshmem_barrier_all();
+        // CUDA_CHECK(cudaStreamSynchronize(stream));
+        // nvshmemx_barrier_all_on_stream(stream);
         double mb_total = 0.0;
         double t_total = 0.0;
         float milliseconds = 0.0;

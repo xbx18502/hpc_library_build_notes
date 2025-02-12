@@ -1,3 +1,11 @@
+#!/bin/bash
+#PJM -L rscgrp=b-batch
+#PJM -L node=1
+#PJM -L elapse=00:02:00
+#PJM -j
+#PJM -S
+
+
 module purge
 module load nvidia/23.9 nvhpcx/23.9-cuda12
 
@@ -13,11 +21,13 @@ export MPI_HOME="/home/app/nvhpc/23.9/Linux_x86_64/23.9/comm_libs/12.2/hpcx/hpcx
 # NCCL settings
 export NCCL_HOME="/home/app/nvhpc/23.9/Linux_x86_64/23.9/comm_libs/nccl"
 
-compile_static=" \
-nvcc -rdc=true -ccbin g++ -gencode=$NVCC_GENCODE -I \
-$NVSHMEM_HOME/include:$MPI_HOME/include mpi_init_put_bw.cu -o \
-mpi_init_put_bw.out -L $NVSHMEM_HOME/lib:$MPI_HOME/lib \
--lmpi -lnvshmem -lnvidia-ml -lcuda -lcudart "
+export OMPI_MCA_plm_rsh_agent="/usr/bin/pjrsh"
 
-echo ${compile_static}
-eval ${compile_static}
+
+task_mpi=" \
+mpirun -v --display-allocation --display-map -hostfile ${PJM_O_NODEINF} \
+-np 2 --map-by ppr:2:node \
+-x NVSHMEMTEST_USE_MPI_LAUNCHER=1 \
+./mpi_init_put_bw.out "
+
+exec ${task_mpi}

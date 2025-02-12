@@ -24,8 +24,8 @@ do {                                                      \
 
 const int message_size = 1<<22;
 
-int skip = 1;
-int loop = 1;
+int skip = 1000;
+int loop = 10000;
 int skip_large = 10;
 int loop_large = 100;
 int large_message_size = 8192;
@@ -51,46 +51,6 @@ __global__ void bw(double* dest, int size){
 
 }
 
-__global__ void bw2(double *data_d, volatile unsigned int *counter_d, int len, int pe, int iter) {
-    int i, peer;
-    unsigned int counter;
-    int tid = (threadIdx.x * blockDim.y * blockDim.z + threadIdx.y * blockDim.z + threadIdx.z);
-    int bid = blockIdx.x;
-    int nblocks = gridDim.x;
-
-    peer = !pe;
-    for (i = 0; i < iter; i++) {
-        nvshmemx_double_put_nbi_block(data_d + (bid * (len / nblocks)),
-                                      data_d + (bid * (len / nblocks)), len / nblocks, peer);
-
-        // synchronizing across blocks
-        __syncthreads();
-        if (!tid) {
-            __threadfence();
-            counter = atomicInc((unsigned int *)counter_d, UINT_MAX);
-            if (counter == (gridDim.x * (i + 1) - 1)) {
-                *(counter_d + 1) += 1;
-            }
-            while (*(counter_d + 1) != i + 1)
-                ;
-        }
-        __syncthreads();
-    }
-
-    // synchronize and call nvshme_quiet
-    __syncthreads();
-    if (!tid) {
-        __threadfence();
-        counter = atomicInc((unsigned int *)counter_d, UINT_MAX);
-        if (counter == (gridDim.x * (i + 1) - 1)) {
-            nvshmem_quiet();
-            *(counter_d + 1) += 1;
-        }
-        while (*(counter_d + 1) != i + 1)
-            ;
-    }
-    __syncthreads();
-}
 int main (int argc, char *argv[]) {
     int mype_node;
     double* msg = (double*)malloc(sizeof(double)*message_size);
@@ -111,7 +71,7 @@ int main (int argc, char *argv[]) {
     mype_node = nvshmem_team_my_pe(NVSHMEMX_TEAM_NODE);
     std::cout<<"complete nvshmemx_init_attr"<<std::endl;
     CUDA_CHECK(cudaSetDevice(mype_node));
-    CUDA_CHECK(cudaStreamCreate(&stream));
+    //CUDA_CHECK(cudaStreamCreate(&stream));
     std::cout<<"complete cudaSetDevice"<<std::endl;
     double *destination = (double *) nvshmem_malloc (sizeof(double)*message_size);
     std::cout<<"complete nvshmem_malloc"<<std::endl;
@@ -137,9 +97,6 @@ int main (int argc, char *argv[]) {
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
     std::cout<<"complete cudaEventCreate"<<std::endl;
-    unsigned int *counter_d;
-    CUDA_CHECK(cudaMalloc((void **)&counter_d, sizeof(unsigned int) * 2));
-    std::cout<<"init counter_d"<<std::endl;
     for (size = 1; size <= MAX_MSG_SIZE_PT2PT; size = (size ? size * 2 : 1)) {
         if (size > large_message_size) {
             loop = loop_large = 100;
@@ -147,77 +104,71 @@ int main (int argc, char *argv[]) {
         }
         //nvshmemx_barrier_all_on_stream(stream);
         if (0 == mype_node) {
-            
             for (int i = 0; i < loop + skip; i++) {
-                
                 if (i == skip) {
-                    CUDA_CHECK(cudaStreamSynchronize(stream));
-                    //CUDA_CHECK(cudaDeviceSynchronize());
-                    nvshmemx_barrier_all_on_stream(stream);
                     cudaEventRecord(start);
                 }
-                
 
-                // ---------bw---------------------
-                bw2<<<4, 1024, 0, stream>>>(destination, size);
-                CUDA_CHECK(cudaStreamSynchronize(stream));
-                //-------------------------------
-                
-
-                
-
-                
-                
-
-                
+                //simple_shift<<<1, 1 , 0, stream>>>(destination, size);
+                //CUDA_CHECK(cudaStreamSynchronize(stream)); 
+                // bw<<<4, 1024, 0, stream>>>(destination, size);
+                bw<<<4, 1024, 0>>>(destination, size);
+                CUDA_CHECK(cudaDeviceSynchronize());
             }
-            /*
-            //-------bw2-------
-            CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
-            bw2<<<4,1024, 0 ,stream>>> (destination, counter_d, size, !mype_node,skip);
-            CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
-            CUDA_CHECK(cudaStreamSynchronize(stream));
-            cudaEventRecord(start);
-            bw2<<<4,1024, 0 ,stream>>> (destination, counter_d, size, !mype_node,loop);
-            //---------------------
-            */
+
             cudaEventRecord(stop);
-            
             CUDA_CHECK(cudaEventSynchronize(stop));
         }
-        //nvshmem_barrier_all();
-        CUDA_CHECK(cudaStreamSynchronize(stream));
-        nvshmemx_barrier_all_on_stream(stream);
+        // std::cout<<"start = "<<start<<std::endl;
+        // std::cout<<"stop = "<<stop<<std::endl;
+        //nvshmemx_barrier_all_on_stream(stream);
         double mb_total = 0.0;
         double t_total = 0.0;
         float milliseconds = 0.0;
         if (0 == mype_node) {
             mb_total = size * loop *8/ ( 1e6);
+            // std::cout<<"mb_total = "<<mb_total<<std::endl;
             cudaEventElapsedTime(&milliseconds, start, stop);
             t_total = milliseconds/1e3;
+            //std::cout<<"t_total = "<<t_total<<std::endl;
             double bw = mb_total / t_total;
-            fprintf(stdout, "%-*d%*.*f\n", 10, size*8, FIELD_WIDTH,
+            //std::cout<<"bw = "<<bw<<std::endl;
+            fprintf(stdout, "%-*d%*.*f\n", 10, size, FIELD_WIDTH,
                     FLOAT_PRECISION, bw);
             fflush(stdout);
-            //std::cout<<"PE0 finish print"<<std::endl;
         }
         else{
-            std::cout<<"PE1 finish print"<<std::endl;
+            /*
+            CUDA_CHECK(cudaMemcpyAsync(msg, destination, sizeof(double)*message_size,
+            cudaMemcpyDeviceToHost, stream));
+            std::cout<<"complete cudaMemcpyAsync"<<std::endl;
+            CUDA_CHECK(cudaStreamSynchronize(stream));
+            std::cout<<"complete cudaStreamSynchronize"<<std::endl;
+            printf("%d: received message ", nvshmem_my_pe());
+            for(int i=0; i<32; i++) {
+                printf("%f ", msg[i]);
+            }
+            printf("\n");
+            */
         }
     }
-    std::cout<<"finish the loop"<<std::endl;
-    cudaEventDestroy(start);
-    std::cout<<"finish destroy the start"<<std::endl;
-    cudaEventDestroy(stop);
-    std::cout<<"finish destroy the stop"<<std::endl;
-    CUDA_CHECK(cudaStreamSynchronize(stream));
+    // simple_shift<<<1, 1, 0, stream>>>(destination);
+    // std::cout<<"complete simple_shift"<<std::endl;
+    // nvshmemx_barrier_all_on_stream(stream);
+    // std::cout<<"complete nvshmemx_barrier_all_on_stream"<<std::endl;
+    // CUDA_CHECK(cudaMemcpyAsync(msg, destination, sizeof(double)*message_size,
+    //             cudaMemcpyDeviceToHost, stream));
+    // std::cout<<"complete cudaMemcpyAsync"<<std::endl;
+    // CUDA_CHECK(cudaStreamSynchronize(stream));
+    // std::cout<<"complete cudaStreamSynchronize"<<std::endl;
+    // printf("%d: received message ", nvshmem_my_pe());
+    // for(int i=0; i<message_size; i++) {
+    //     printf("%f ", msg[i]);
+    // }
+    // printf("\n");
+
     nvshmem_free(destination);
-    std::cout<<"finish nvshmem_free"<<std::endl;
     nvshmem_finalize();
-    std::cout<<"finish nvshmem_finalize"<<std::endl;
-    CUDA_CHECK(cudaStreamDestroy(stream));
-    std::cout<<"finish destroy the stream"<<std::endl;
     MPI_Finalize();
-    std::cout<<"finish MPI_Finalize"<<std::endl;
     return 0;
 }
