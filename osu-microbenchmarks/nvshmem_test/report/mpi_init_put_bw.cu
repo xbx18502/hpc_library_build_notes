@@ -141,56 +141,53 @@ int main (int argc, char *argv[]) {
     CUDA_CHECK(cudaMalloc((void **)&counter_d, sizeof(unsigned int) * 2));
     std::cout<<"init counter_d"<<std::endl;
     for (size = 1; size <= MAX_MSG_SIZE_PT2PT; size = (size ? size * 2 : 1)) {
-        if (size > large_message_size) {
-            loop = loop_large = 100;
-            skip = skip_large = 0;
-        }
-        //nvshmemx_barrier_all_on_stream(stream);
+        nvshmem_barrier_all();
+        // CUDA_CHECK(cudaDeviceSynchronize());
+        // nvshmem_barrier_all();
+        // nvshmem_sync_all();
         if (0 == mype_node) {
-            
-            for (int i = 0; i < loop + skip; i++) {
-                
-                if (i == skip) {
-                    CUDA_CHECK(cudaStreamSynchronize(stream));
-                    //CUDA_CHECK(cudaDeviceSynchronize());
-                    nvshmemx_barrier_all_on_stream(stream);
-                    cudaEventRecord(start);
-                }
-                
-
-                // ---------bw---------------------
-                bw2<<<4, 1024, 0, stream>>>(destination, size);
-                CUDA_CHECK(cudaStreamSynchronize(stream));
-                //-------------------------------
-                
-
-                
-
-                
-                
-
+            for (int i = 0; i < skip; i++) {
+                CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
+                bw2<<<4,1024>>> (destination, counter_d, size, !mype_node,1);
                 
             }
-            /*
-            //-------bw2-------
-            CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
-            bw2<<<4,1024, 0 ,stream>>> (destination, counter_d, size, !mype_node,skip);
-            CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
-            CUDA_CHECK(cudaStreamSynchronize(stream));
-            cudaEventRecord(start);
-            bw2<<<4,1024, 0 ,stream>>> (destination, counter_d, size, !mype_node,loop);
-            //---------------------
-            */
-            cudaEventRecord(stop);
+            // nvshmem_barrier_all();
             
-            CUDA_CHECK(cudaEventSynchronize(stop));
         }
+        nvshmem_barrier_all();
+        cudaEventRecord(start);
+        CUDA_CHECK(cudaEventSynchronize(start));
+       
+        
+        
+        if (0 == mype_node) {
+            for (int i = 0; i < loop; i++) {
+                CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
+                bw2<<<4,1024>>> (destination, counter_d, size, !mype_node,1);
+                
+            }
+            // nvshmem_barrier_all();
+            
+        }
+        else{
+            // nvshmem_barrier_all();
+        }
+        // nvshmem_sync_all();
+        nvshmem_barrier_all();
+        cudaEventRecord(stop);
+        CUDA_CHECK(cudaEventSynchronize(stop));
+        
+        
+        
+
         //nvshmem_barrier_all();
-        CUDA_CHECK(cudaStreamSynchronize(stream));
-        nvshmemx_barrier_all_on_stream(stream);
+        //CUDA_CHECK(cudaStreamSynchronize(stream));
+        //nvshmem_barrier_all();
         double mb_total = 0.0;
         double t_total = 0.0;
         float milliseconds = 0.0;
+        float milliseconds0 = 0.0;
+        float milliseconds1 = 0.0;
         if (0 == mype_node) {
             mb_total = size * loop *8/ ( 1e6);
             cudaEventElapsedTime(&milliseconds, start, stop);
@@ -198,11 +195,19 @@ int main (int argc, char *argv[]) {
             double bw = mb_total / t_total;
             fprintf(stdout, "%-*d%*.*f\n", 10, size*8, FIELD_WIDTH,
                     FLOAT_PRECISION, bw);
+            // cudaEventElapsedTime(&milliseconds0, start0, stop0);
+            // fprintf(stdout, "mype0 elaped time = %f\n", milliseconds0);
+            // fprintf(stdout, "mype0 start time = %f\n", start);
+            // fprintf(stdout, "mype0 stop time = %f\n", stop);
             fflush(stdout);
             //std::cout<<"PE0 finish print"<<std::endl;
+            nvshmem_barrier_all();
         }
         else{
+            // cudaEventElapsedTime(&milliseconds1, start1, stop1);
+            // fprintf(stdout, "mype1 elaped time = %f\n", milliseconds1);
             std::cout<<"PE1 finish print"<<std::endl;
+            nvshmem_barrier_all();
         }
     }
     std::cout<<"finish the loop"<<std::endl;

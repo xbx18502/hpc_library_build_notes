@@ -31,7 +31,16 @@ mpirun -v --display-allocation --display-map -hostfile ${PJM_O_NODEINF} \
 -np 2 --map-by ppr:2:node \
 ./mpi_init_put_bw.out "
 
-for i in {1..10}
+profileWithNsys=" \
+mpirun -v --display-allocation --display-map -hostfile ${PJM_O_NODEINF} \
+-np 2 --map-by ppr:2:node \
+nsys profile -t cuda,nvtx -o mpi_init_put_bw_${PJM_JOBID}_${PJM_JOBID}.qdrep \
+./mpi_init_put_bw.out "
+
+
+
+
+for i in {1...10}
 do
     echo "iteration: ${i}"
     eval ${task_mpi}

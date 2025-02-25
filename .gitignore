@@ -8,7 +8,7 @@
 *.jar
 *.class
 *.zip
-
+*.nsys-rep
 # Don't ignore .gitignore itself
 !.gitignore
 

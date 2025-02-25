@@ -140,35 +140,38 @@ int main (int argc, char *argv[]) {
     unsigned int *counter_d;
     CUDA_CHECK(cudaMalloc((void **)&counter_d, sizeof(unsigned int) * 2));
     std::cout<<"init counter_d"<<std::endl;
+
     for (size = 1; size <= MAX_MSG_SIZE_PT2PT; size = (size ? size * 2 : 1)) {
         if (size > large_message_size) {
             loop = loop_large = 100;
             skip = skip_large = 0;
         }
         //nvshmemx_barrier_all_on_stream(stream);
-        nvshmem_barrier_all();
+        //nvshmem_barrier_all();
         if (0 == mype_node) {
             
             
-            
+            CUDA_CHECK(cudaDeviceSynchronize());
             //-------bw2-------
             // CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
             // bw2<<<4,1024, 0 ,stream>>> (destination, counter_d, size, !mype_node,skip);
             CUDA_CHECK(cudaMemset(counter_d, 0, sizeof(unsigned int) * 2));
             // CUDA_CHECK(cudaStreamSynchronize(stream));
             cudaEventRecord(start);
-            CUDA_CHECK(cudaEventSynchronize(start));
-            bw2<<<4,1024, 0 ,stream>>> (destination, counter_d, size, !mype_node,loop);
+            //CUDA_CHECK(cudaEventSynchronize(start));
+            bw2<<<4,1024>>> (destination, counter_d, size, mype_node,loop);
             //---------------------
-            // nvshmem_barrier_all();
             cudaEventRecord(stop);
-            
             CUDA_CHECK(cudaEventSynchronize(stop));
+            //CUDA_CHECK(cudaDeviceSynchronize());
+            nvshmem_barrier_all();
         }
         else{
             // nvshmem_barrier_all();
+            nvshmem_barrier_all();
+            
         }
-        nvshmem_barrier_all();
+        //nvshmem_barrier_all();
         // CUDA_CHECK(cudaStreamSynchronize(stream));
         // nvshmemx_barrier_all_on_stream(stream);
         double mb_total = 0.0;
