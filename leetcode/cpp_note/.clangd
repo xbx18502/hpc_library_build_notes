@@ -1,0 +1,23 @@
+# .clangd
+CompileFlags:
+  # Add include path
+  Add:
+  - -include sstream
+  - -include assert
+  - -std=c++11
+
+  Compiler: g++
+
+  Remove: 
+  - -stdlib=libc++
+  - -stdlib=libstdc++
+
+If:
+  PathMatch: .*\.(cu|cuh|cpp|h|c)$
+  
+Index:
+  Background: Build
+
+Diagnostics:
+  Suppress: 
+    

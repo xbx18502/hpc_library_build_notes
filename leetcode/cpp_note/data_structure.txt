@@ -1,0 +1,92 @@
+// vector
+vector<int> a(n, num);
+a.push_back(num);
+a.insert(iterator, num);
+a.erase(num);
+a.pop_back();
+a.size();
+a.empty();
+// 2-d vector
+vector<vector<int>> b(n, vector<int>(m, num));
+
+// list
+list<int> li1;
+li1.push_front(1);
+li1.push_back(2);
+li1.insert(iterator, 3);
+li1.erase(iterator);
+advance(iterator, 1);
+next(iterator,1);
+
+// linkedlist
+struct ListNode {
+    int val;  // 节点上存储的元素
+    ListNode *next;  // 指向下一个节点的指针
+    ListNode(int x) : val(x), next(NULL) {}  // 节点的构造函数
+};
+ListNode *a = new ListNode(1);
+
+// hashmap
+map<int,int> map0;
+unordered_map<int,int> map1;
+set<int> set0;
+// iterate the map
+for (auto it = map0.begin(); it != map0.end(); ++it) {
+    std::cout << "[" << it->first << ", " << it->second << "]\n";
+}
+
+// string
+string s;
+s.size();
+
+// stack
+stack<int> st0;
+st0.push(1);
+cout<<st0.top()<<endl;
+st0.pop();
+
+// queue
+queue<int> que0;
+que.front();
+que.push(1);
+que.pop();
+
+//deque(double ended queue)
+deque<int> dq ={3,4,5};
+dq.push_back(1);
+dp.push_front(2);
+dq.pop_back(3);
+dq.pop_back(4);
+
+// binary tree
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+TreeNode *t0 = new TreeNode(1);
+TreeNode *t1 = new TreeNode(2);
+t0->left=t1;
+
+// priority_queue
+
+priority_queue<int, vector<int>,
+                    greater<int>> pq0;
+
+class mycomparison {
+    public:
+        bool operator()(const pair<int, int>& lhs, const pair<int, int>& rhs) {
+            return lhs.second > rhs.second;
+        }
+    };
+priority_queue<pair<int, int>, vector<pair<int, int>>, mycomparison> pri_que;
+
+// graph: Adjacency Matrix
+
+vector<vector<int>> g(n);
+
+// graph: Adjacency List
+vector<list<int>> g(n);
+
+
